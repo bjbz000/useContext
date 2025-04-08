@@ -44,10 +44,10 @@ import { createContext } from 'react';
 
 const ThemeContext = createContext();
 ```
-
 - Creating a new context named `ThemeContext`.
 
 - This returns an object with `Provider` and `Consumer`.
+
 
 ### 2. Create a provider component
 
@@ -65,10 +65,43 @@ function ThemeProvider({ children }) {
   );
 }
 ```
-
 - `darkMode` is your state (false = light, true = dark).
 
 - `toggleTheme` switches between dark/light.
 
 - The `value` prop in `<Provider>` contains the data you want to share.
 
+
+### 3. Access the context with useContext
+
+```javascript
+import { useContext } from 'react';
+
+function ThemeButton() {
+  const { darkMode, toggleTheme } = useContext(ThemeContext);
+
+  return (
+    <button onClick={toggleTheme}>
+      {darkMode ? 'Dark Mode On' : 'Light Mode On'}
+    </button>
+  );
+}
+```
+- `useContext(ThemeContext)` gives you access to `darkMode` and `toggleTheme`.
+
+- No props are passed — it’s clean and global.
+
+### 4. Wrap your app with the provider
+
+```javascript
+import { ThemeProvider } from '../context/ThemeContext';
+
+export default function App({ Component, pageProps }) {
+  return (
+    <ThemeProvider>
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
+}
+```
+- 
