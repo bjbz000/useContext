@@ -2,9 +2,7 @@
 
 import React, { useState } from "react";
 import BasicContext from "./scenarios/basicContext";
-import PropDrillingContext from "./scenarios/propDrillingContext";
 import RerenderIssueContext from "./scenarios/reRenderIssueContext";
-import MemoizedContext from "./scenarios/memoizedContext";
 
 export default function ContextDemo() {
   const [scenario, setScenario] = useState("basic");

@@ -119,3 +119,25 @@ button {
   cursor: pointer;
   margin-bottom: 10px;
 }
+
+.box {
+  padding: 16px;
+  margin: 12px 0;
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+.box-light {
+  background: #e0f7fa;
+  color: #004d40;
+}
+
+.box-dark {
+  background: #263238;
+  color: #eceff1;
+}
+
+.highlight {
+  background: #fff3cd;
+  border-left: 6px solid #ff9800;
+}

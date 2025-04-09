@@ -1,82 +1,76 @@
 import React, {
-    createContext,
-    useContext,
-    useState,
-    useCallback,
-    useMemo,
-    useEffect
-  } from "react";
-  
-  const ThemeContext = createContext();
-  
-  const DisplayTheme = () => {
-    const { theme } = useContext(ThemeContext);
-    const [renderTime, setRenderTime] = useState("");
-  
-    useEffect(() => {
-      setRenderTime(new Date().toLocaleTimeString());
-    }, [theme]);
-  
-  
-    return (
-      <div className={`rerender-box rerender-${theme}`}>
-        <h4>Theme is: {theme.toUpperCase()}</h4>
-        <p>Rendered at: <strong>{renderTime}</strong></p>
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+} from "react";
+
+// Context
+const ThemeContext = createContext();
+
+// Displays theme + re-render time
+const DisplayTheme = () => {
+  const  theme  = useContext(ThemeContext);
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    setTime(new Date().toLocaleTimeString());
+  }, [theme]);
+
+  return (
+    <div className={`box box-${theme}`}>
+      <h3>Theme: {theme.toUpperCase()}</h3>
+      <p>Rendered at: <strong>{time}</strong></p>
+    </div>
+  );
+};
+
+// Memoized component that re-renders conditionally
+const IrrelevantComponent = React.memo(({ trigger }) => {
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    setTime(new Date().toLocaleTimeString());
+  }, [trigger]);
+
+  return (
+    <div className="box highlight">
+      <h3>Unrelated Component</h3>
+      <p>Rendered at: <strong>{time}</strong></p>
+    </div>
+  );
+});
+
+// Main Component
+export default function RerenderIssueContext() {
+  const [theme, setTheme] = useState("light");
+  const [track, setTrack] = useState(true);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  }, []);
+
+  const contextValue = useMemo(() => ({ theme }), [theme]);
+
+  return (
+    <ThemeContext.Provider value={contextValue}>
+      <div style={{ marginBottom: 16 }}>
+        <button onClick={toggleTheme}>Toggle Theme</button>
+        <label style={{ marginLeft: 16 }}>
+          <input
+            type="checkbox"
+            checked={track}
+            onChange={(e) => setTrack(e.target.checked)}
+            style={{ marginRight: 8 }}
+          />
+          Re-render Unrelated Component
+        </label>
       </div>
-    );
-  };
-  
-  const IrrelevantComponent = React.memo(({ renderSignal }) => {
-    const [renderTime, setRenderTime] = useState("");
-  
-    useEffect(() => {
-      // Update render time on re-render
-      setRenderTime(new Date().toLocaleTimeString());
-    }, [renderSignal]); // triggers whenever renderSignal changes
-  
-    return (
-      <div className="rerender-box rerender-highlight">
-        <h4>Unrelated Component</h4>
-        <p>This component re-renders only if toggle is ON.</p>
-        <p>Rendered at: <strong>{renderTime}</strong></p>
-      </div>
-    );
-  });
-  
-  export default function RerenderIssueContextWithToggle() {
-    const [theme, setTheme] = useState("light");
-    const [trackUnrelated, setTrackUnrelated] = useState(true);
-  
-    const toggleTheme = useCallback(() => {
-      setTheme((t) => (t === "light" ? "dark" : "light"));
-    }, []);
-  
-    const contextValue = useMemo(() => ({ theme, toggleTheme }), [theme]);
-  
-    return (
-      <ThemeContext.Provider value={contextValue}>
-        <div style={{ marginBottom: 12 }}>
-          <button onClick={toggleTheme}>Toggle Theme</button>
-          <label style={{ marginLeft: 16 }}>
-            <input
-              type="checkbox"
-              checked={trackUnrelated}
-              onChange={(e) => setTrackUnrelated(e.target.checked)}
-              style={{ marginRight: 6 }}
-            />
-            Show Unrelated Component Re-render
-          </label>
-        </div>
-  
-        <DisplayTheme />
-  
-        {/* Trigger re-render only if toggle is ON */}
-        {trackUnrelated ? (
-          <IrrelevantComponent renderSignal={theme} />
-        ) : (
-          <IrrelevantComponent renderSignal="static" />
-        )}
-      </ThemeContext.Provider>
-    );
-  }
-  
+
+      <DisplayTheme />
+      <IrrelevantComponent trigger={track ? theme : "static"} />
+    </ThemeContext.Provider>
+  );
+}
