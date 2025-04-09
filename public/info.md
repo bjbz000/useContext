@@ -33,7 +33,7 @@
 | createContext()             | Creates a new context object                      |
 | <Context.Provider>          | Provides the context value to children            |
 | useContext()                | Consumes the context inside functional components |
-| <Context.Consumer>          | Legacy method (used in class components)          |
+| <Context.Consumer>          | Used in class components                          |
 
 ## __4. Basic Examples of Usage__
 
