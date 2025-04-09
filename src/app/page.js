@@ -1,9 +1,9 @@
-import Weather from "@/components/weather";
+import ContextDemo from "@/components/contextDemo";
 
 export default function Home() {
   return (
     <main>
-      <Weather />
+      <ContextDemo />
     </main>
   );
 }
